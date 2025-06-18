@@ -25,7 +25,7 @@ public partial class NPCCar : Car
         desiredSpeed = rng.RandfRange(3f, 50f);
         actualSpeed = desiredSpeed;
         raycastAhead = GetNode<RayCast2D>("RayCast2D");
-        followDistance = rng.RandfRange(20f, 75f); // Random follow distance between 20 and 75 pixels
+        followDistance = rng.RandfRange(30f, 85f); // Random follow distance between 30 and 75 pixels
         raycastAhead.TargetPosition = new Vector2(0, -followDistance); // Set raycast length based on follow distance
         base._Ready();
     }
@@ -45,7 +45,7 @@ public partial class NPCCar : Car
                 // Always slow down if raycast is colliding, regardless of distance
                 if (distance < followDistance - 5)  //-5 to allow for some buffer
                 {
-                    targetSpeed = Mathf.Max(-10f, actualSpeed - deceleration * (float)delta);
+                    targetSpeed = Mathf.Max(-15f, actualSpeed - deceleration * (float)delta);
                     SetBrakeLights(true);
                 }
                 else
@@ -62,7 +62,7 @@ public partial class NPCCar : Car
                 // Always slow down if raycast is colliding, regardless of distance
                 if (distance < followDistance - 5) //-5 to allow for some buffer
                 {
-                    targetSpeed = Mathf.Max(-10f, actualSpeed - deceleration * (float)delta);
+                    targetSpeed = Mathf.Max(-15f, actualSpeed - deceleration * (float)delta);
                     SetBrakeLights(true);
                 }
                 else
@@ -93,6 +93,7 @@ public partial class NPCCar : Car
         }
         else if (actualSpeed > targetSpeed)
         {
+            SetBrakeLights(true);
             actualSpeed = Mathf.Max(actualSpeed - deceleration * (float)delta, targetSpeed);
         }
 

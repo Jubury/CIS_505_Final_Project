@@ -71,4 +71,5 @@ color = Color(1, 0.415686, 0, 1)
 texture = ExtResource("5_4s5p8")
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2(0, 11)
 target_position = Vector2(0, -55)
