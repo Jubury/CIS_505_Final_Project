@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dhrvhs1acbi0y"]
+
+[ext_resource type="Script" uid="uid://djqwpqo4wm4j5" path="res://Scripts/CarSpawn.cs" id="1_73pnx"]
+
+[node name="CarSpawn" type="Node2D"]
+script = ExtResource("1_73pnx")
