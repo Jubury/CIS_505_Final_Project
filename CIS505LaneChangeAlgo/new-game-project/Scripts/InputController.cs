@@ -62,6 +62,7 @@ public partial class InputController : Car
 
     public override void _PhysicsProcess(double delta)
     {
+        UpdateRaycastDebugLines();
         if (isLeftSignalOn)
         {
             if (blinkInterval <= 0)
@@ -135,37 +136,39 @@ public partial class InputController : Car
 
         }
     }
-    // private void UpdateRaycastDebugLines()
-    // {
-    //     string[] rayNames = {
-    //         "Bottom_Right_1", "Bottom_Right_2", "Bottom_Right_3",
-    //         "Top_Right_1", "Top_Right_2", "Top_Right_3",
-    //         "Bottom_Left_1", "Bottom_Left_2", "Bottom_Left_3",
-    //         "Top_Left_1", "Top_Left_2", "Top_Left_3",
-    //         "Left", "Right"
-    //     };
+    private void UpdateRaycastDebugLines()
+    {
+        string[] rayNames = {
+            "Bottom_Right_1", "Bottom_Right_2", "Bottom_Right_3",
+            "Top_Right_1", "Top_Right_2", "Top_Right_3",
+            "Bottom_Left_1", "Bottom_Left_2", "Bottom_Left_3",
+            "Top_Left_1", "Top_Left_2", "Top_Left_3",
+            "Left", "Right"
+        };
 
-    //     foreach (string name in rayNames)
-    //     {
-    //         var ray = GetNodeOrNull<RayCast2D>("Rays/" + name);
-    //         var line = GetNodeOrNull<Line2D>(name + "_Debug");
+        foreach (string name in rayNames)
+        {
+            var ray = GetNodeOrNull<RayCast2D>("Rays/" + name);
+            var line = GetNodeOrNull<Line2D>("Rays/" + name + "_Line");
 
-    //         if (ray == null || line == null)
-    //             continue;
-
-    //         if (ray.IsColliding())
-    //         {
-    //             Vector2 hitPos = ray.GetCollisionPoint();
-    //             line.Points = new Vector2[] { ray.Position, ToLocal(hitPos) };
-    //             line.DefaultColor = Colors.Red;
-    //         }
-    //         else
-    //         {
-    //             line.Points = new Vector2[] { ray.Position, ray.TargetPosition };
-    //             line.DefaultColor = Colors.Green;
-    //         }
-    //     }
-    // }
+            if (ray == null || line == null)
+            {
+                GD.PrintErr("RayCast2D or Line2D node not found: " + name);
+                continue;
+            }
+            if (ray.IsColliding())
+            {
+                Vector2 hitPos = ray.GetCollisionPoint();
+                line.Points = new Vector2[] { ray.Position, ToLocal(hitPos) };
+                line.DefaultColor = Colors.Red;
+            }
+            else
+            {
+                line.Points = new Vector2[] { ray.Position, ray.TargetPosition };
+                line.DefaultColor = Colors.Green;
+            }
+        }
+    }
 
     public bool IsSafeToChangeLane()
     {
