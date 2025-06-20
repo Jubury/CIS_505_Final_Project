@@ -6,12 +6,16 @@ public partial class InputController : Car
     [Export] public PointLight2D[] leftBlinkers;
     [Export] public PointLight2D[] rightBlinkers;
     [Export] public float blinkInterval = 0.2f; // Time in seconds between blinks
+    [Export] public RoadScroll roadScroll; // Reference to the RoadScroll node
     public bool isLeftSignalOn = false;
     public bool isRightSignalOn = false;
     public bool isChangingLanes = false; // Flag to check if the car is changing lanes
     public bool isSafeToChangeLane = true; // Flag to check if it's safe to change lanes
 
-
+    public override void _Ready()
+    {
+        base._Ready();
+    }
 
     public override void _Input(InputEvent @event)
     {
@@ -135,6 +139,9 @@ public partial class InputController : Car
             }
 
         }
+
+        roadScroll.ChangeRoadSpeed();
+        
     }
     private void UpdateRaycastDebugLines()
     {

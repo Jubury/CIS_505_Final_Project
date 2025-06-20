@@ -23,6 +23,11 @@ window/stretch/mode="viewport"
 
 project/assembly_name="New Game Project"
 
+[global_group]
+
+Cars=""
+RoadScroll=""
+
 [input]
 
 SignalLeft={

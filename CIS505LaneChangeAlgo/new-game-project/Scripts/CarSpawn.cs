@@ -6,9 +6,10 @@ public partial class CarSpawn : Node2D
 {
     [Export] PackedScene carScene = GD.Load<PackedScene>("res://Scenes/Car.tscn"); // The scene to instantiate for the car
     public List<NPCCar> cars = new List<NPCCar>(); // Array to hold the spawned cars
-    public int maxCars = 5; // Maximum number of cars to spawn
+    [Export] public int maxCars = 2; // Maximum number of cars to spawn
     public float spawnTimer = 0f; // Timer to control spawn rate
     [Export] public float spawnInterval = 2f; // Time in seconds between spawns
+    [Export] public bool slowSpawn = false; // Flag to control spawn speed
 
 
     public override void _Ready()
@@ -21,7 +22,26 @@ public partial class CarSpawn : Node2D
     {
         if (cars.Count < maxCars)
         {
-            bool canSpawn = cars.Count == 0 || IsCarVisibleFromCamera(cars[cars.Count - 1]);
+            bool canSpawn = false;
+            if (cars.Count == 0)
+            {
+                canSpawn = true;
+            }
+            else
+            {
+                var lastCar = cars[cars.Count - 1];
+                if (!IsInstanceValid(lastCar))
+                {
+                    canSpawn = true;
+                }
+                else
+                {
+                    float distance = Mathf.Abs(GlobalPosition.Y - lastCar.GlobalPosition.Y);
+                    if (distance >= 30f && IsCarVisibleFromCamera(lastCar))
+                        canSpawn = true;
+                }
+            }
+
             if (canSpawn)
             {
                 spawnTimer += (float)delta;
@@ -69,6 +89,7 @@ public partial class CarSpawn : Node2D
         GetTree().CurrentScene.AddChild(newCar); // add to root scene
         cars.Add(newCar);
         newCar._Ready();
+        newCar.SetRandomSpeed(slowSpawn);
     }
 
 

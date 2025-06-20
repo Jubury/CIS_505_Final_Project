@@ -22,13 +22,14 @@ data = {
 [sub_resource type="ImageTexture" id="ImageTexture_4s5p8"]
 image = SubResource("Image_om1i1")
 
-[node name="Car" type="CharacterBody2D" node_paths=PackedStringArray("raycastAhead", "backLeftLight", "backRightLight", "frontLeftLight", "frontRightLight")]
+[node name="Car" type="CharacterBody2D" node_paths=PackedStringArray("frontLeftLight", "frontRightLight", "rayForward", "rayBackward", "backLeftLight", "backRightLight") groups=["Cars"]]
 script = ExtResource("1_om1i1")
-raycastAhead = NodePath("RayCast2D")
-backLeftLight = NodePath("LeftBlinker")
-backRightLight = NodePath("RightBlinker2")
 frontLeftLight = NodePath("LeftBlinker2")
 frontRightLight = NodePath("RightBlinker1")
+rayForward = NodePath("RayForward")
+rayBackward = NodePath("RayBackward")
+backLeftLight = NodePath("LeftBlinker")
+backRightLight = NodePath("RightBlinker2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_qeqd0")
@@ -70,6 +71,10 @@ scale = Vector2(0.5, 0.5)
 color = Color(1, 0.415686, 0, 1)
 texture = ExtResource("5_4s5p8")
 
-[node name="RayCast2D" type="RayCast2D" parent="."]
+[node name="RayForward" type="RayCast2D" parent="."]
 position = Vector2(0, 11)
 target_position = Vector2(0, -55)
+
+[node name="RayBackward" type="RayCast2D" parent="."]
+position = Vector2(0, -11)
+target_position = Vector2(0, 55)

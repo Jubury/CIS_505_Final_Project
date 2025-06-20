@@ -1,0 +1,36 @@
+[gd_scene load_steps=2 format=3 uid="uid://bq612iev2y6ow"]
+
+[ext_resource type="Script" uid="uid://bey42v5274008" path="res://Scripts/ChangeWeatherButton.cs" id="1_jxero"]
+
+[node name="UI" type="CanvasLayer"]
+
+[node name="Control" type="Control" parent="."]
+z_index = 10
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="ChangeWeatherButton" type="Button" parent="Control"]
+z_index = 10
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -137.0
+offset_top = -31.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Change Weather"
+script = ExtResource("1_jxero")
+
+[connection signal="pressed" from="Control/ChangeWeatherButton" to="Control/ChangeWeatherButton" method="on_pressed"]
