@@ -14,6 +14,7 @@ public partial class InputController : Car
     public bool isChangingLanes = false; // Flag to check if the car is changing lanes
     public bool isSafeToChangeLane = true; // Flag to check if it's safe to change lanes
     private float laneCheckCooldown = 1.0f; // Cooldown for lane change checks
+    private float blinkTimer = 8f; // Timer before aborting lane change
     private float laneChangeCooldown = 0f; // Cooldown after lane change
     private float mergeBufferTimer = 0f; // Tracks how long the lane has been safe
     private float mergeBufferThreshold = 1.5f; // Lane must be safe for this long
@@ -121,6 +122,17 @@ public partial class InputController : Car
                     GD.Print("No safe lane to change to. Stay in Lane");
                 }
                 laneCheckCooldown = 1.0f; // Reset cooldown
+            }
+        }
+        else
+        {
+            blinkTimer -= (float)delta;
+            if (blinkTimer <= 0f)
+            {
+                // If the blink timer runs out, turn off both signals
+                LeftSignalSwitch(false);
+                RightSignalSwitch(false);
+                blinkTimer = 8f; // Reset the blink timer
             }
         }
 

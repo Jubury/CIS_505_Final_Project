@@ -18,7 +18,7 @@ public partial class NPCCar : Car
     {
         RandomNumberGenerator rng = new RandomNumberGenerator();
         rng.Randomize();
-        followDistance = rng.RandfRange(30f, 85f);
+        followDistance = rng.RandfRange(30f, 55f);
         rayForward.TargetPosition = new Vector2(0, -followDistance);
         roadScroll = (RoadScroll) GetTree().GetNodesInGroup("RoadScroll")[0];
         base._Ready();
@@ -54,7 +54,7 @@ public partial class NPCCar : Car
 
                 if (distance < followDistance - 5)
                 {
-                    targetSpeed = Mathf.Max(-15f, actualSpeed - deceleration * (float)delta);
+                    targetSpeed = Mathf.Max(-25f, actualSpeed - deceleration * (float)delta);
                     SetBrakeLights(true);
                 }
                 else
@@ -69,7 +69,7 @@ public partial class NPCCar : Car
 
                 if (distance < followDistance - 5)
                 {
-                    targetSpeed = Mathf.Max(-15f, actualSpeed - deceleration * (float)delta);
+                    targetSpeed = Mathf.Max(-25f, actualSpeed - deceleration * (float)delta);
                     SetBrakeLights(true);
                 }
                 else
@@ -82,6 +82,7 @@ public partial class NPCCar : Car
             {
                 targetSpeed = -25f;
                 SetBrakeLights(true);
+                GD.Print("Unexpected collider");
             }
         }
         else
