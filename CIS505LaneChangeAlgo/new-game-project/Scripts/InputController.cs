@@ -235,11 +235,27 @@ public partial class InputController : Car
                 float frontSpeed = (float)frontCollider.Call("GetCurrentSpeed");
                 float frontTTC = TimeToCollision(frontCollider.GlobalPosition, frontSpeed);
                 GD.Print("Front TTC: " + frontTTC);
+                // If ttc is high risk
                 if (frontTTC < 3f)
                 {
                     GD.Print("Unsafe FRONT TTC: Staying in lane.");
                     return false;
                 }
+
+                // If ttc is medium risk
+                else if (frontTTC >= 3f && frontTTC < 5f)
+                {
+                    // Is it raining 
+                    if (raining())
+                    {
+                        GD.Print("Unsafe FRONT TTC: Staying in lane.");
+                        return false;
+                    }
+
+                }
+
+                // else ttc is low risk > 5f 
+
             }
         }
 
@@ -259,11 +275,27 @@ public partial class InputController : Car
                     float rearTTC = TimeToCollision(rearCollider.GlobalPosition, rearSpeed);
                     GD.Print("Rear TTC: " + rearTTC);
 
-                    if (rearTTC < 5f)
+                    // If ttc is high risk
+                    if (rearTTC < 3f)
                     {
                         GD.Print("Unsafe REAR TTC: Staying in lane.");
                         return false;
                     }
+
+                    // If ttc is medium risk
+                    else if (rearTTC >= 3f && rearTTC < 5f)
+                    {
+                        // Is it raining 
+                        if (raining())
+                        {
+                            GD.Print("Unsafe REAR TTC: Staying in lane.");
+                            return false;
+                        }
+ 
+                    }
+
+                    // else ttc is low risk > 5f 
+
                 }
             }
         }
@@ -357,4 +389,13 @@ public partial class InputController : Car
         blinkInterval = 0.2f;
         laneChangeCooldown = 1.5f;
     }
+
+    // Checking to see if its raining
+    private bool raining()
+    {
+        var rainTexture = GetTree().Root.GetNode<TextureRect>("Level/RainTexture");
+        return rainTexture.Visible;
+    }
+
+
 }
