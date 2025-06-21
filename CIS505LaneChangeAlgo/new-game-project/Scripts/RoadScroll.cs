@@ -8,7 +8,7 @@ public partial class RoadScroll : TileMapLayer
     [Export] public int tileHeight = 16;         // Height of each tile in pixels
     [Export] public int mapWidth = 10;           // Number of tiles across
     [Export] public int mapHeight = 20;          // Number of tiles down (visible area)
-    [Export] public InputController simulationCar; // Reference to the InputController
+    [Export] public SimulationCar simulationCar; // Reference to the SimulationCar
     public float difference = 0f; // Difference between desired speed and current road speed
     private float pixelOffset = 0f;
 
@@ -69,7 +69,7 @@ public partial class RoadScroll : TileMapLayer
             if (simulationCar.GlobalPosition.DistanceTo(frontCar.GlobalPosition) < 15f)
             {
                 simulationCar.SetBrakeLights(true); // Turn on brake lights
-                targetSpeed = frontCar.actualSpeed - 15f;
+                targetSpeed = frontCar.actualSpeed - 30f;
                 float newScrollSpeed = Mathf.Max(desiredSpeed - 30f, scrollSpeed + targetSpeed);
                 if(scrollSpeed > newScrollSpeed)
                 {
@@ -85,9 +85,6 @@ public partial class RoadScroll : TileMapLayer
                     otherCar.actualSpeed += -targetSpeed; // normalize the speed of all other cars
                 }
             }
-
-            GD.Print($"Car in front new speed: {frontCar.actualSpeed}, Current road speed: {scrollSpeed}");
-
         }
         else
         {

@@ -52,7 +52,7 @@ grow_horizontal = 0
 
 [node name="TextureRect" type="TextureRect" parent="Control2"]
 layout_mode = 0
-offset_left = -213.0
+offset_left = -360.0
 offset_right = 40.0
 offset_bottom = 121.0
 texture = SubResource("GradientTexture2D_qdvrb")
@@ -62,7 +62,7 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -253.0
+offset_left = -399.0
 offset_bottom = 121.0
 grow_horizontal = 0
 text = "Thoughts..."

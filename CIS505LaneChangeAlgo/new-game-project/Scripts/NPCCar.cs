@@ -64,7 +64,7 @@ public partial class NPCCar : Car
                     SetBrakeLights(false);
                 }
             }
-            else if (collider is InputController playerCar)
+            else if (collider is SimulationCar playerCar)
             {
                 float distance = GlobalPosition.DistanceTo(playerCar.GlobalPosition);
 

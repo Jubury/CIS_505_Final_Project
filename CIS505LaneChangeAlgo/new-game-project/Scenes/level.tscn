@@ -26,7 +26,7 @@ size = Vector2(382, 20)
 
 [sub_resource type="Gradient" id="Gradient_0f350"]
 offsets = PackedFloat32Array(0.0120482)
-colors = PackedColorArray(0.129412, 0.286275, 0.443137, 0.682353)
+colors = PackedColorArray(0.129412, 0.286275, 0.443137, 0.513726)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_8c0lf"]
 gradient = SubResource("Gradient_0f350")
@@ -137,12 +137,11 @@ maxCars = 5
 [node name="UI" parent="." instance=ExtResource("6_0f350")]
 
 [node name="RainTexture" type="TextureRect" parent="."]
-visible = false
 z_index = 5
-offset_left = -219.0
+offset_left = -311.0
 offset_top = -109.0
-offset_right = 169.0
-offset_bottom = 108.0
+offset_right = 232.0
+offset_bottom = 109.0
 texture = SubResource("GradientTexture1D_8c0lf")
 
 [connection signal="body_entered" from="KillWall" to="KillWall" method="OnBodyEntered"]
