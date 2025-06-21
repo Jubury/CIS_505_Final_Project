@@ -7,12 +7,13 @@ public partial class InputController : Car
     [Export] public PointLight2D[] rightBlinkers;
     [Export] public float blinkInterval = 0.2f; // Time in seconds between blinks
     [Export] public RoadScroll roadScroll; // Reference to the RoadScroll node
-
+    [Export] public RayCast2D[] leftRays; // Array of left raycasts for lane change checks
+    [Export] public RayCast2D[] rightRays; // Array of right raycasts for lane change checks
     public bool isLeftSignalOn = false; // Flag to check if left signal is on
     public bool isRightSignalOn = false; // Flag to check if right signal is on
     public bool isChangingLanes = false; // Flag to check if the car is changing lanes
     public bool isSafeToChangeLane = true; // Flag to check if it's safe to change lanes
-
+    private float laneCheckCooldown = 1.0f; // Cooldown for lane change checks
     private float laneChangeCooldown = 0f; // Cooldown after lane change
     private float mergeBufferTimer = 0f; // Tracks how long the lane has been safe
     private float mergeBufferThreshold = 1.5f; // Lane must be safe for this long
@@ -30,51 +31,101 @@ public partial class InputController : Car
             {
                 if (isRightSignalOn)
                 {
-                    // Turn off right signal if it's on
-                    isRightSignalOn = false;
-                    foreach (var blinker in rightBlinkers)
-                    {
-                        blinker.Visible = false; // Turn off right blinkers
-                        blinkInterval = 0.2f;
-                    }
+                    RightSignalSwitch(false); // Turn off right signal if it's on
                 }
                 else
                 {
-                    // Turn on left signal
-                    isLeftSignalOn = true;
-                    foreach (var blinker in leftBlinkers)
-                    {
-                        blinker.Visible = true; // Turn on left blinkers
-                    }
+                    LeftSignalSwitch(true); // Turn on left signal
                 }
             }
             if (@event.IsActionPressed("SignalRight"))
             {
                 if (isLeftSignalOn)
                 {
-                    // Turn off left signal if it's on
-                    isLeftSignalOn = false;
-                    foreach (var blinker in leftBlinkers)
-                    {
-                        blinker.Visible = false; // Turn off left blinkers
-                        blinkInterval = 0.2f;
-                    }
+                    LeftSignalSwitch(false); // Turn off left signal if it's on
                 }
                 else
                 {
-                    // Turn on right signal
-                    isRightSignalOn = true;
-                    foreach (var blinker in rightBlinkers)
-                    {
-                        blinker.Visible = true; // Turn on right blinkers
-                    }
+                    RightSignalSwitch(true); // Turn on right signal
                 }
             }
         }
     }
 
+    public void RightSignalSwitch(bool isOn)
+    {
+        // Turn on right signal
+        isRightSignalOn = isOn;
+        foreach (var blinker in rightBlinkers)
+        {
+            blinker.Visible = isOn; // Turn on right blinkers
+            if(!isOn)
+                blinkInterval = 0.2f;
+        }
+    }
+    public void LeftSignalSwitch(bool isOn) // Turn on/off left signals
+    {
+        // Turn on right signal
+        isLeftSignalOn = isOn;
+        foreach (var blinker in leftBlinkers)
+        {
+            blinker.Visible = isOn; // Turn on right blinkers
+            if(!isOn)
+                blinkInterval = 0.2f;
+        }
+    }
+    public bool BasicLaneCheck(bool isLeftLane)
+    {
+        // Check if the lane is clear for a basic lane change
+        if (isLeftLane)
+        {
+            foreach (var ray in leftRays)
+            {
+                if (ray.IsColliding())
+                    return false; // Left lane is not clear
+            }
+        }
+        else
+        {
+            foreach (var ray in rightRays)
+            {
+                if (ray.IsColliding())
+                    return false; // Right lane is not clear
+            }
+        }
+        return true; // Lane is clear for a basic lane change
+    }
+    
     public override void _PhysicsProcess(double delta)
     {
+
+        if (!isRightSignalOn && !isLeftSignalOn)
+        {
+            laneCheckCooldown -= (float)delta;
+            if (ShouldChangeLane() && laneCheckCooldown <= 0f)
+            {
+                // Basic left lane check
+                if (BasicLaneCheck(true)) // Left lane check
+                {
+                    LeftSignalSwitch(true); // Turn on left signal
+                    RightSignalSwitch(false); // Ensure right signal is off
+                }
+                // Basic right lane check
+                else if (BasicLaneCheck(false)) // Right lane check
+                {
+                    RightSignalSwitch(true); // Turn on right signal
+                    LeftSignalSwitch(false); // Ensure left signal is off
+                }
+                else
+                {
+                    GD.Print("No safe lane to change to. Stay in Lane");
+                }
+                laneCheckCooldown = 1.0f; // Reset cooldown
+            }
+        }
+
+
+
         UpdateRaycastDebugLines();
 
         // Update cooldown timer
@@ -147,6 +198,16 @@ public partial class InputController : Car
 
         // This line came from version 1 and must be kept
         roadScroll.ChangeRoadSpeed();
+    }
+
+
+    public bool ShouldChangeLane()
+    {
+        //Check if scroll speed is less than desired speed
+        if (roadScroll.scrollSpeed < roadScroll.desiredSpeed)
+            return true;
+        else
+            return false;
     }
 
     // Update the visual debug lines for all rays

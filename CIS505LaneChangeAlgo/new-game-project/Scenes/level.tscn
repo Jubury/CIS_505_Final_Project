@@ -32,11 +32,9 @@ gradient = SubResource("Gradient_0f350")
 
 [node name="Level" type="Node2D"]
 
-[node name="Car" parent="." node_paths=PackedStringArray("leftBlinkers", "rightBlinkers", "roadScroll") instance=ExtResource("1_k5f4k")]
+[node name="Car" parent="." node_paths=PackedStringArray("roadScroll") instance=ExtResource("1_k5f4k")]
 z_index = 1
 position = Vector2(-0.5, 0)
-leftBlinkers = []
-rightBlinkers = []
 roadScroll = NodePath("../RoadScroll")
 
 [node name="RoadScroll" type="TileMapLayer" parent="." node_paths=PackedStringArray("simulationCar") groups=["RoadScroll"]]

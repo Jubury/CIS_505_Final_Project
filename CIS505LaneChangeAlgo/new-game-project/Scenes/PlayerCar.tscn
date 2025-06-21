@@ -15,11 +15,13 @@ data = {
 [sub_resource type="ImageTexture" id="ImageTexture_k5rbv"]
 image = SubResource("Image_grm1w")
 
-[node name="Car" node_paths=PackedStringArray("leftBlinkers", "rightBlinkers") instance=ExtResource("1_oyay1")]
+[node name="Car" node_paths=PackedStringArray("leftBlinkers", "rightBlinkers", "leftRays", "rightRays") instance=ExtResource("1_oyay1")]
 script = ExtResource("2_k5rbv")
 leftBlinkers = [NodePath("LeftBlinker"), NodePath("LeftBlinker2")]
 rightBlinkers = [NodePath("RightBlinker1"), NodePath("RightBlinker2")]
 blinkInterval = 0.2
+leftRays = [NodePath("Rays/Left"), NodePath("Rays/Top_Left_1"), NodePath("Rays/Top_Left_2"), NodePath("Rays/Top_Left_3"), NodePath("Rays/Bottom_Left_1"), NodePath("Rays/Bottom_Left_2"), NodePath("Rays/Bottom_Left_3")]
+rightRays = [NodePath("Rays/Right"), NodePath("Rays/Top_Right_1"), NodePath("Rays/Top_Right_2"), NodePath("Rays/Top_Right_3"), NodePath("Rays/Bottom_Right_1"), NodePath("Rays/Bottom_Right_2"), NodePath("Rays/Bottom_Right_3")]
 
 [node name="Sprite2D" parent="." index="1"]
 texture = SubResource("ImageTexture_k5rbv")
