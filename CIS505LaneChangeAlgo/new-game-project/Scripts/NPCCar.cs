@@ -13,6 +13,7 @@ public partial class NPCCar : Car
     public RoadScroll roadScroll;
     public CarSpawn carSpawn;
     public bool IsPacingSimulationLane = false;
+    [Export] private bool onComing = false;
 
     public override void _Ready()
     {
@@ -105,7 +106,10 @@ public partial class NPCCar : Car
             desiredSpeed = rng.RandfRange(-20f, -3f) + roadScroll.difference;
         }
         else {
-            desiredSpeed = rng.RandfRange(4f, 40f) + roadScroll.difference;
+            if(onComing)
+                desiredSpeed = rng.RandfRange(124f, 180f) + roadScroll.difference;
+            else
+                desiredSpeed = rng.RandfRange(4f, 40f) + roadScroll.difference;
         } 
         actualSpeed = desiredSpeed;
     }

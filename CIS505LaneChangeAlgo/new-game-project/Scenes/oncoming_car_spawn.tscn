@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://bsoc2b1afm166"]
+
+[ext_resource type="PackedScene" uid="uid://dhrvhs1acbi0y" path="res://Scenes/car_spawn.tscn" id="1_mj05r"]
+[ext_resource type="PackedScene" uid="uid://bdvrpcmgh17tv" path="res://Scenes/OncomingCar.tscn" id="2_08qc8"]
+
+[node name="CarSpawn" instance=ExtResource("1_mj05r")]
+carScene = ExtResource("2_08qc8")
