@@ -137,6 +137,7 @@ maxCars = 5
 [node name="UI" parent="." instance=ExtResource("6_0f350")]
 
 [node name="RainTexture" type="TextureRect" parent="."]
+visible = false
 z_index = 5
 offset_left = -311.0
 offset_top = -109.0
