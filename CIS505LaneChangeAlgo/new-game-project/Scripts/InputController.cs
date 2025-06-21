@@ -18,9 +18,11 @@ public partial class InputController : Car
     private float laneChangeCooldown = 0f; // Cooldown after lane change
     private float mergeBufferTimer = 0f; // Tracks how long the lane has been safe
     private float mergeBufferThreshold = 1.5f; // Lane must be safe for this long
+    private Label outputLabel;
 
     public override void _Ready()
     {
+        outputLabel = GetTree().Root.GetNode<Label>("Level/UI/Control2/TextureRect/Output");
         base._Ready();
     }
 
@@ -121,7 +123,10 @@ public partial class InputController : Car
                 }
                 else
                 {
-                    GD.Print("No safe lane to change to. Stay in Lane");
+                    if(outputLabel != null)
+                        outputLabel.Text = "No safe lane to change to. Stay in Lane";
+                    else
+                        GD.Print("No safe lane to change to. Stay in Lane");
                 }
                 laneCheckCooldown = 1.5f; // Reset cooldown
             }
@@ -223,7 +228,10 @@ public partial class InputController : Car
         //Check if scroll speed is less than 2mph of the desired speed
         if (roadScroll.scrollSpeed < (roadScroll.desiredSpeed-2f))
         {
-            GD.Print(roadScroll.scrollSpeed + " < " + roadScroll.desiredSpeed + " - Should Change Lane");
+            if(outputLabel != null)
+                outputLabel.Text = "Speed: " + roadScroll.scrollSpeed + " < Desired Speed: " + roadScroll.desiredSpeed + " - Should Change Lane";
+            else
+                GD.Print("Speed: " + roadScroll.scrollSpeed + " < " + roadScroll.desiredSpeed + " - Should Change Lane");
             return true;
         }
         else
@@ -293,7 +301,10 @@ public partial class InputController : Car
         RayCast2D sideCheck = GetNode<RayCast2D>("Rays/" + rayPrefix);
         if (sideCheck.IsColliding() && !isChangingLanes)
         {
-            GD.Print("Blocked: cannot change lane to the " + rayPrefix);
+            if(outputLabel != null)
+                outputLabel.Text = "Blocked: cannot change lane to the " + rayPrefix;
+            else
+                GD.Print("Blocked: cannot change lane to the " + rayPrefix);
             return false;
         }
 
@@ -301,7 +312,10 @@ public partial class InputController : Car
         RayCast2D dangerRay = GetNode<RayCast2D>("Rays/" + rayPrefix);
         if (dangerRay.IsColliding() && !isChangingLanes)
         {
-            GD.Print("Immediate danger: " + rayPrefix + " detects a car");
+            if(outputLabel != null)
+                outputLabel.Text = "Immediate danger: " + rayPrefix + " detects a car";
+            else
+                GD.Print("Immediate danger: " + rayPrefix + " detects a car");
             return false;
         }
 
@@ -315,10 +329,16 @@ public partial class InputController : Car
             {
                 float frontSpeed = (float)frontCollider.Call("GetCurrentSpeed");
                 float frontTTC = TimeToCollision(frontCollider.GlobalPosition, frontSpeed);
-                GD.Print("Front TTC: " + frontTTC);
+                if(outputLabel != null)
+                    outputLabel.Text = "Front TTC: " + frontTTC;
+                else
+                    GD.Print("Front TTC: " + frontTTC);
                 // If ttc is high risk
                 if (frontTTC < 3f)
                 {
+                    if(outputLabel != null)
+                        outputLabel.Text = "Unsafe FRONT TTC: " + frontTTC + " - Staying in lane.";
+                    else
                     GD.Print("Unsafe FRONT TTC: Staying in lane.");
                     return false;
                 }
@@ -329,7 +349,10 @@ public partial class InputController : Car
                     // Is it raining 
                     if (raining())
                     {
-                        GD.Print("Unsafe FRONT TTC: Staying in lane.");
+                        if(outputLabel != null)
+                            outputLabel.Text = "Unsafe FRONT TTC: " + frontTTC + " - Staying in lane.";
+                        else
+                            GD.Print("Unsafe FRONT TTC: Staying in lane.");
                         return false;
                     }
 
@@ -354,12 +377,18 @@ public partial class InputController : Car
                 if (rearSpeed > mySpeed)
                 {
                     float rearTTC = TimeToCollision(rearCollider.GlobalPosition, rearSpeed);
-                    GD.Print("Rear TTC: " + rearTTC);
+                    if(outputLabel != null)
+                        outputLabel.Text = "Rear TTC: " + rearTTC;
+                    else
+                        GD.Print("Rear TTC: " + rearTTC);
 
                     // If ttc is high risk
                     if (rearTTC < 3f)
                     {
-                        GD.Print("Unsafe REAR TTC: Staying in lane.");
+                        if(outputLabel != null)
+                            outputLabel.Text = "Unsafe REAR TTC: " + rearTTC + " Staying in lane.";
+                        else
+                            GD.Print("Unsafe REAR TTC: Staying in lane.");
                         return false;
                     }
 
@@ -369,7 +398,10 @@ public partial class InputController : Car
                         // Is it raining 
                         if (raining())
                         {
-                            GD.Print("Unsafe REAR TTC: Staying in lane.");
+                            if(outputLabel != null)
+                                outputLabel.Text = "Unsafe REAR TTC: " + rearTTC + " Staying in lane.";
+                            else
+                                GD.Print("Unsafe REAR TTC: Staying in lane.");
                             return false;
                         }
  
@@ -391,13 +423,19 @@ public partial class InputController : Car
             var ray = GetNode<RayCast2D>("Rays/" + rayName);
             if (ray.IsColliding() && !isChangingLanes)
             {
+                if(outputLabel != null)
+                    outputLabel.Text = rayName + ": Lane not clear!";
+                else
                 GD.Print("Lane not clear: " + rayName + " hit object");
                 return false;
             }
         }
 
         // Lane is safe
-        GD.Print(isLeft ? "SAFE TO CHANGE LANE LEFT" : "SAFE TO CHANGE LANE RIGHT");
+        if(outputLabel != null)
+            outputLabel.Text = isLeft ? "Safe to change lane LEFT" : "Safe to change lane RIGHT";
+        else
+            GD.Print(isLeft ? "SAFE TO CHANGE LANE LEFT" : "SAFE TO CHANGE LANE RIGHT");
         return true;
     }
 
@@ -436,11 +474,17 @@ public partial class InputController : Car
                 {
                     float rearSpeed = (float)rearCollider.Call("GetCurrentSpeed");
                     float rearTTC = TimeToCollision(rearCollider.GlobalPosition, rearSpeed);
-                    GD.Print("Rear TTC (during merge): " + rearTTC);
+                    if(outputLabel != null)
+                        outputLabel.Text = "Rear TTC (during merge): " + rearTTC;
+                    else
+                        GD.Print("Rear TTC (during merge): " + rearTTC);
 
                     if (rearTTC < 3f)
                     {
-                        GD.Print("ABORTING MERGE: Vehicle speeding in!");
+                        if(outputLabel != null)
+                            outputLabel.Text = "ABORTING MERGE: Vehicle speeding in!";
+                        else
+                            GD.Print("ABORTING MERGE: Vehicle speeding in!");
                         tween.Kill(); // Stop current tween
                         Tween cancelTween = GetTree().CreateTween();
                         cancelTween.TweenProperty(this, "position", startPosition, 0.3f);
@@ -461,7 +505,10 @@ public partial class InputController : Car
         }
 
         // Merge completed successfully
-        GD.Print("Merge completed.");
+        if(outputLabel != null)
+            outputLabel.Text = "Merge completed successfully!";
+        else
+            GD.Print("Merge completed.");
         isChangingLanes = false;
         isLeftSignalOn = false;
         isRightSignalOn = false;

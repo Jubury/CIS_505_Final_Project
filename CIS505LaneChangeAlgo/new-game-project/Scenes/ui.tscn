@@ -1,6 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://bq612iev2y6ow"]
+[gd_scene load_steps=4 format=3 uid="uid://bq612iev2y6ow"]
 
 [ext_resource type="Script" uid="uid://bey42v5274008" path="res://Scripts/ChangeWeatherButton.cs" id="1_jxero"]
+
+[sub_resource type="Gradient" id="Gradient_jxero"]
+offsets = PackedFloat32Array(1)
+colors = PackedColorArray(0.117647, 0.117647, 0.117647, 0.529412)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_qdvrb"]
+gradient = SubResource("Gradient_jxero")
 
 [node name="UI" type="CanvasLayer"]
 
@@ -32,5 +39,35 @@ grow_horizontal = 0
 grow_vertical = 0
 text = "Change Weather"
 script = ExtResource("1_jxero")
+
+[node name="Control2" type="Control" parent="."]
+z_index = 10
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+
+[node name="TextureRect" type="TextureRect" parent="Control2"]
+layout_mode = 0
+offset_left = -213.0
+offset_right = 40.0
+offset_bottom = 121.0
+texture = SubResource("GradientTexture2D_qdvrb")
+
+[node name="Output" type="Label" parent="Control2/TextureRect"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -253.0
+offset_bottom = 121.0
+grow_horizontal = 0
+text = "Thoughts..."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
 
 [connection signal="pressed" from="Control/ChangeWeatherButton" to="Control/ChangeWeatherButton" method="on_pressed"]
