@@ -35,7 +35,7 @@ public partial class Car : CharacterBody2D
         return currentSpeed;
     }
 
-    protected void SetBrakeLights(bool state)
+    public void SetBrakeLights(bool state)
     {
         backLeftLight.Visible = state;
         backRightLight.Visible = state;

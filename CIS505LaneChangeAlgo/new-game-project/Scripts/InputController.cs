@@ -110,18 +110,20 @@ public partial class InputController : Car
                 {
                     LeftSignalSwitch(true); // Turn on left signal
                     RightSignalSwitch(false); // Ensure right signal is off
+                    blinkTimer = 8f; // Reset the blink timer
                 }
                 // Basic right lane check
                 else if (BasicLaneCheck(false)) // Right lane check
                 {
                     RightSignalSwitch(true); // Turn on right signal
                     LeftSignalSwitch(false); // Ensure left signal is off
+                    blinkTimer = 8f; // Reset the blink timer
                 }
                 else
                 {
                     GD.Print("No safe lane to change to. Stay in Lane");
                 }
-                laneCheckCooldown = 1.0f; // Reset cooldown
+                laneCheckCooldown = 1.5f; // Reset cooldown
             }
         }
         else
@@ -133,6 +135,9 @@ public partial class InputController : Car
                 LeftSignalSwitch(false);
                 RightSignalSwitch(false);
                 blinkTimer = 8f; // Reset the blink timer
+                laneChangeCooldown = 1.5f; // Reset lane change cooldown
+                isChangingLanes = false; // Reset changing lanes state
+                return;
             }
         }
 
@@ -215,9 +220,12 @@ public partial class InputController : Car
 
     public bool ShouldChangeLane()
     {
-        //Check if scroll speed is less than desired speed
-        if (roadScroll.scrollSpeed < roadScroll.desiredSpeed)
+        //Check if scroll speed is less than 2mph of the desired speed
+        if (roadScroll.scrollSpeed < (roadScroll.desiredSpeed-2f))
+        {
+            GD.Print(roadScroll.scrollSpeed + " < " + roadScroll.desiredSpeed + " - Should Change Lane");
             return true;
+        }
         else
             return false;
     }

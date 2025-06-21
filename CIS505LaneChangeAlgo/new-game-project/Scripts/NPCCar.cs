@@ -6,7 +6,7 @@ public partial class NPCCar : Car
     [Export] public float desiredSpeed = 0;
     [Export] public float actualSpeed = 0;
     [Export] public float acceleration = 100f;
-    [Export] public float deceleration = 300f;
+    [Export] public float deceleration = 400f;
     [Export] public float followDistance = 40f;
     [Export] public PointLight2D frontLeftLight;
     [Export] public PointLight2D frontRightLight;
@@ -54,7 +54,7 @@ public partial class NPCCar : Car
 
                 if (distance < followDistance - 5)
                 {
-                    targetSpeed = Mathf.Max(-25f, actualSpeed - deceleration * (float)delta);
+                    targetSpeed = Mathf.Max(-45f, actualSpeed - deceleration * (float)delta);
                     SetBrakeLights(true);
                 }
                 else
@@ -69,7 +69,7 @@ public partial class NPCCar : Car
 
                 if (distance < followDistance - 5)
                 {
-                    targetSpeed = Mathf.Max(-25f, actualSpeed - deceleration * (float)delta);
+                    targetSpeed = Mathf.Max(-45f, actualSpeed - deceleration * (float)delta);
                     SetBrakeLights(true);
                 }
                 else
@@ -77,12 +77,6 @@ public partial class NPCCar : Car
                     targetSpeed = Mathf.Min(0f, desiredSpeed);
                     SetBrakeLights(false);
                 }
-            }
-            else
-            {
-                targetSpeed = -25f;
-                SetBrakeLights(true);
-                GD.Print("Unexpected collider");
             }
         }
         else

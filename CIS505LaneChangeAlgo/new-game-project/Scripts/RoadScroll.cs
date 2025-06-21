@@ -39,8 +39,10 @@ public partial class RoadScroll : TileMapLayer
         if (simulationCar.rayForward.IsColliding())
         {
             var collider = simulationCar.rayForward.GetCollider();
+            NPCCar firstCar = null;
             if (collider is NPCCar carInFront)
             {
+                firstCar = carInFront;
                 while (carInFront.rayForward.IsColliding())
                 {
                     // Keep checking until we find a car that is not colliding
@@ -48,49 +50,67 @@ public partial class RoadScroll : TileMapLayer
                 }
                 frontCar = carInFront;
             }
-
-            if (frontCar.actualSpeed == 0f)
-                    return;
-            else if (frontCar.actualSpeed < 0f)
+            var targetSpeed = frontCar.actualSpeed;
+            if (targetSpeed == 0f)
             {
-                float newScrollSpeed = scrollSpeed + frontCar.actualSpeed;
-                scrollSpeed = Mathf.Max(desiredSpeed - 20f, newScrollSpeed); // Don't go below logical min
+                simulationCar.SetBrakeLights(false); // Turn on brake lights
+                return;
             }
-
-
+            else if (targetSpeed < 0f)
+            {
+                simulationCar.SetBrakeLights(true); // Turn on brake lights
+                float newScrollSpeed = Mathf.Max(desiredSpeed - 30f, scrollSpeed + targetSpeed);
+                if(scrollSpeed > newScrollSpeed)
+                {
+                    scrollSpeed -= newScrollSpeed / 5f; // Don't go below logical min
+                }
+            }
+            //if the distance to the first car is less than 15, then we need to slow down the road speed and speed up the other cars until distance is greater than 15
+            if (simulationCar.GlobalPosition.DistanceTo(frontCar.GlobalPosition) < 15f)
+            {
+                simulationCar.SetBrakeLights(true); // Turn on brake lights
+                targetSpeed = frontCar.actualSpeed - 15f;
+                float newScrollSpeed = Mathf.Max(desiredSpeed - 30f, scrollSpeed + targetSpeed);
+                if(scrollSpeed > newScrollSpeed)
+                {
+                    scrollSpeed -= newScrollSpeed / 5f; // Don't go below logical min
+                }
+            }
             // Update all other cars' speeds
             foreach (var car in GetTree().GetNodesInGroup("Cars"))
             {
                 if (car is NPCCar otherCar)
                 {
-                    otherCar.desiredSpeed += -frontCar.actualSpeed; // normalize the speed of all other cars
-                    otherCar.actualSpeed += -frontCar.actualSpeed; // normalize the speed of all other cars
+                    otherCar.desiredSpeed += -targetSpeed; // normalize the speed of all other cars
+                    otherCar.actualSpeed += -targetSpeed; // normalize the speed of all other cars
                 }
             }
 
             GD.Print($"Car in front new speed: {frontCar.actualSpeed}, Current road speed: {scrollSpeed}");
-        
+
         }
         else
         {
             difference = desiredSpeed - scrollSpeed;
             difference = Mathf.Clamp(difference, 0f, 20f); // Prevent it from exceeding logical bounds
 
-            if(difference == 0f)
+            if (difference == 0f)
+            {
+                
                 return; // No change needed if already at desired speed
-
-            if(scrollSpeed < desiredSpeed)
-                scrollSpeed += difference / 2f; // Increase road speed to desired speed
+            }
+            if (scrollSpeed < desiredSpeed)
+                scrollSpeed += difference/5f; // Increase road speed to desired speed
 
             foreach (var car in GetTree().GetNodesInGroup("Cars"))
             {
                 if (car is NPCCar otherCar)
                 {
-                    otherCar.desiredSpeed -= difference / 2f; // Reset all cars to desired speed
-                    otherCar.actualSpeed -= difference / 2f; // Reset all cars to desired speed
+                    otherCar.desiredSpeed -= difference/5f; // Reset all cars to desired speed
+                    otherCar.actualSpeed -= difference/5f; // Reset all cars to desired speed
                 }
             }
-            if(frontCar != null)
+            if (frontCar != null)
                 GD.Print($"Car in front new speed: {frontCar.actualSpeed}, Current road speed: {scrollSpeed}");
         }
     }
