@@ -45,9 +45,6 @@ The system was validated in simulated highway environments with:
 - Weather condition changes
 - Emergency abort situations
 
-## Team
-Developed collaboratively as part of CIS 505 - Autonomous Systems course at University of Michigan-Dearborn.
-
 ## Future Enhancements
 - Integration with trajectory prediction for surrounding vehicles
 - Expansion of detection arc for approaching threats
